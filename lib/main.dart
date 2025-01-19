@@ -16,12 +16,47 @@ class MyApp extends StatelessWidget {
       title: 'wic',
       theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: '/',
-      routes: {
-        '/': (context) => HomeScreen(),
-        '/create-mariage': (context) => CreateMariageScreen(userId: 1), // Exemple avec un userId
-        '/login': (context) => LoginScreen(), // Exemple avec un mariageId et un nomMariage
-        '/invites-list': (context) => InvitesListScreen(mariageId: 1, nomMariage: 'Mariage de test'), // Exemple avec un mariageId et un nomMariage
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(builder: (context) => HomeScreen());
+          case '/create-mariage':
+            if (settings.arguments is int) {
+              final userId = settings.arguments as int;
+              return MaterialPageRoute(
+                builder: (context) => CreateMariageScreen(userId: userId),
+              );
+            }
+            return _errorRoute();
+          case '/invites-list':
+            if (settings.arguments is Map<String, dynamic>) {
+              final args = settings.arguments as Map<String, dynamic>;
+              final mariageId = args['mariageId'] as int;
+              final nomMariage = args['nomMariage'] as String;
+              return MaterialPageRoute(
+                builder: (context) => InvitesListScreen(
+                  mariageId: mariageId,
+                  nomMariage: nomMariage,
+                ),
+              );
+            }
+            return _errorRoute();
+          case '/login':
+            return MaterialPageRoute(builder: (context) => LoginScreen());
+          default:
+            return _errorRoute();
+        }
       },
+    );
+  }
+
+  /// Route d'erreur
+  Route<dynamic> _errorRoute() {
+    return MaterialPageRoute(
+      builder: (context) => Scaffold(
+        appBar: AppBar(title: Text('Erreur')),
+        body: Center(child: Text('Page non trouvée')),
+      ),
     );
   }
 }

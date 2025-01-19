@@ -138,5 +138,32 @@ class DatabaseHelper {
     return await db.delete('Invite', where: 'id = ?', whereArgs: [id]);
   }
 
+  /// Récupérer un invité en fonction de son QR code
+  Future<Map<String, dynamic>?> getInviteByQRCode(String qrCode) async {
+    final db = await database;
+    final result = await db.query(
+      'Invite',
+      where: 'qrCode = ?',
+      whereArgs: [qrCode],
+    );
+
+    if (result.isNotEmpty) {
+      return result.first;
+    }
+    return null;
+  }
+
+  /// Mettre à jour les informations d'un invité
+  Future<int> updateInvite(int id, Map<String, dynamic> updatedInvite) async {
+    final db = await database;
+    return await db.update(
+      'Invite',
+      updatedInvite,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+
 
 }

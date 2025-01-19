@@ -93,33 +93,37 @@ class _HomeScreenState extends State<HomeScreen> {
                       radius: 30,
                       child: Text('${mariage['nomMarie1'][0]}/${mariage['nomMarie2'][0]}'),
                     ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete_forever, color: Colors.red),
-                      onPressed: () async {
-                        // demander confirmation avant de supprimer
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text('Supprimer le mariage'),
-                            content: Text(
-                                'Voulez-vous vraiment supprimer ce mariage ? \n\n Cela supprimera également tous les invités associés.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('Annuler', style: TextStyle(color: Colors.blue)),
+                    trailing: Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.delete_forever, color: Colors.red),
+                          onPressed: () async {
+                            // demander confirmation avant de supprimer
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('Supprimer le mariage'),
+                                content: Text(
+                                    'Voulez-vous vraiment supprimer ce mariage ? \n\n Cela supprimera également tous les invités associés.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text('Annuler', style: TextStyle(color: Colors.blue)),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      _dbHelper.deleteMariage(mariage['id']);
+                                      _loadMariages(); // Recharger les mariages après suppression
+                                    },
+                                    child: Text('Supprimer', style: TextStyle(color: Colors.red)),
+                                  ),
+                                ],
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  _dbHelper.deleteMariage(mariage['id']);
-                                  _loadMariages(); // Recharger les mariages après suppression
-                                },
-                                child: Text('Supprimer', style: TextStyle(color: Colors.red)),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 );
@@ -130,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/create-mariage').then((_) {
+          Navigator.pushNamed(context, '/create-mariage', arguments: 1).then((_) {
             _loadMariages(); // Recharger les mariages après création
           });
         },

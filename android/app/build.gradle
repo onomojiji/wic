@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.wic"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 34
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -22,9 +22,9 @@ android {
     defaultConfig {
         applicationId = "com.example.wic"
         minSdk = 27
-        targetSdk = 35
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
     }
 
     buildTypes {
